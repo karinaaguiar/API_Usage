@@ -1,33 +1,29 @@
-﻿@{
-  ViewData["Title"] = "Index";
+﻿@model IEnumerable<API_Usage.Models.News>
+@{
+    ViewData["Title"] = "Home";
 }
 
-<h2>IEX Trading Application</h2>
-<hr />
+<section id="information">
+    <div class="container">
+        <h1>Q-Stock let's you quickly fetch stock data from <a href="https://iextrading.com/developer/" target="_blank">IEX</a></h1>
+    </div>
+</section>
 
-<div>
-  <p>
-    This application let's you fetch trading data from IEX via their public
-    <a href="https://iextrading.com/developer/">API</a>.
-    <br />
-    <br />
-    The <a asp-area="" asp-controller="Home" asp-action="Symbols">Symbols</a> tab fetches symbols data from the
-    <a href="https://iextrading.com/developer/docs/#reference-data">IEX Reference API </a> and displays the results.
-    This data can also be saved in the local database.
-    <br />
-    The <a asp-area="" asp-controller="Home" asp-action="Chart">Chart</a> tab let's you select a Company(symbol) and fetches a quote from
-    <a href="https://iextrading.com/developer/docs/#stocks">IEX Stock API</a>.
-    The quote can also be saved in the local database.
-    <br />
-    The <a asp-area="" asp-controller="Home" asp-action="Refresh">Refresh</a> tab let's you refresh the local database, that is, remove all its contents.
-  </p>
-  <p>
-    The application demonstrates the following -
-    <ul>
-      <li>Connection to REST API (the example uses IEXTrading, an easy-to-use API that provides stock data)</li>
-      <li>Parsing the Json objects returned from the API</li>
-      <li>Modeling API results as entities</li>
-      <li>Persisting data to a relational database</li>
+<div class="container">
+    <h2>Q-Stock News</h2>
+    <ul class="c_ul_ques">
+        @foreach (var item in Model)
+        {
+            <li class="c_li_ques">
+                <div class="c_div_question">
+                    <span class="c_question"><a href="@item.url" target="_blank">@Html.DisplayFor(modelItem => item.headline)</a></span>
+                    <span class="c_answer">
+                        @Html.DisplayFor(modelItem => item.summary)
+                    </span>
+                </div>
+            </li>
+        }
     </ul>
-  </p>
 </div>
+
+

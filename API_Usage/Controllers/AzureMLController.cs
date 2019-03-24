@@ -47,7 +47,7 @@ namespace API_Usage.Controllers
         //const string apiKey = "API_KEY";
         //client.BaseAddress = new Uri("BASE_ADRESS");
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
         // WARNING: The 'await' statement below can result in a deadlock if you are calling this code 
         //  from the UI thread of an ASP.Net application.

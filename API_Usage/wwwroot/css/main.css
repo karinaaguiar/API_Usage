@@ -1,0 +1,326 @@
+body {
+    font: 15px/1.5 Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.body_content {
+    max-width: 100%;
+    margin: 0 2em;
+    display: none;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.dark {
+    padding: 15px;
+    background: #35424a;
+    color: #ffffff;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+ul {
+    margin: 0;
+}
+
+/* Header */
+header {
+    background: #353637;
+    color: #ffffff;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: #32a0c2 3px solid;
+}
+
+    header a {
+        color: #ffffff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 16px;
+    }
+
+    header li {
+        float: left;
+        display: inline;
+        padding: 0 20px 0 20px;
+    }
+
+    header #branding {
+        float: left;
+    }
+
+        header #branding h1 {
+            margin: 0;
+        }
+
+        header #branding a {
+            text-transform: capitalize;
+        }
+
+    header nav {
+        float: right;
+        margin-top: 10px;
+    }
+
+    header .highlight, header .current a {
+        color: #32a0c2;
+        font-weight: bold;
+    }
+
+    header a:hover {
+        color: #cccccc;
+        font-weight: bold;
+    }
+
+/* Information */
+#information {
+    min-height: 400px;
+    background: url('../img/stock-market-today-results-640x426.jpg') no-repeat center;
+    background-size: cover;
+    text-align: center;
+    color: #ffffff;
+}
+
+    #information h1 {
+        margin-top: 100px;
+        font-size: 55px;
+        margin-bottom: 10px;
+    }
+    #information a {
+        color: #ffffff;
+    }
+
+/* Boxes */
+#boxes {
+    margin-top: 20px;
+}
+
+    #boxes .box {
+        float: left;
+        text-align: center;
+        width: 30%;
+        padding: 10px;
+    }
+
+    #boxes .sec {
+        float: left;
+        text-align: center;
+        width: 45%;
+        padding: 15px;
+    }
+
+/* Footer */
+footer {
+    padding: 20px;
+    margin-top: 20px;
+    color: #ffffff;
+    background-color: #32a0c2;
+    text-align: center;
+}
+
+/* Sidebar */
+aside#sidebar {
+    float: right;
+    width: 30%;
+    padding: 5px;
+}
+
+    aside#sidebar input, aside#sidebar textarea {
+        width: 90%;
+        padding: 5px;
+    }
+
+/* Categories */
+.body_content .category_contents {
+    width: 100%;
+}
+
+.category_container {
+    width: 100%;
+    margin-top: 1em;
+}
+
+.c_heading {
+    display: block;
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+    color: #000000;
+    font-size: 1.5em;
+    font-style: oblique;
+    border-bottom: 1px solid wheat;
+}
+
+.c_ul_ques, .c_ul_products {
+    margin: 0;
+    -moz-padding-start: 0;
+    -webkit-padding-start: 0;
+    -webkit-column-break-inside: avoid; /* Chrome, Safari */
+    page-break-inside: avoid; /* Theoretically FF 20+ */
+    break-inside: avoid-column;
+}
+
+.c_ul_ques {
+    columns: 2;
+}
+
+.c_li_ques, .c_li_product {
+    list-style: none;
+    display: table;
+    -webkit-column-break-inside: avoid; /* Chrome, Safari */
+    page-break-inside: avoid; /* Theoretically FF 20+ */
+    break-inside: avoid-column;
+}
+
+.c_question, .c_answer {
+    display: block;
+}
+
+.c_div_question {
+    padding-top: 0.5em;
+}
+
+.c_question {
+    font-weight: bold;
+}
+
+.c_answer {
+    text-align: justify;
+    margin-top: 0.25em;
+    color: #808080;
+}
+
+.c_ul_products {
+    columns: 4;
+    margin-top: 1em;
+}
+
+.c_div_prod {
+    width: 100%;
+    display: block;
+    padding-top: 0.5em;
+}
+
+    .c_div_prod .c_prod_img {
+        width: 100%;
+        max-height: 100%;
+    }
+
+    .c_div_prod .c_prod_name {
+        display: block;
+        text-align: center;
+    }
+
+/* Slider */
+.home_slider {
+    width: 100%;
+    height: 400px;
+    background-color: transparent;
+    margin: 1em 0;
+    display: block;
+    position: relative;
+}
+
+.my_slide {
+    width: 100%;
+    height: 400px;
+    text-align: center;
+}
+
+.anim_fade {
+    animation: fading 10s infinite;
+}
+
+.slider_image {
+    width: auto;
+    height: 400px;
+    max-width: 100%;
+}
+
+.slider_caption {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #80808099;
+    color: wheat;
+    padding: 0.5em;
+    display: none;
+}
+
+.slide_btn_next, .slide_btn_prev {
+    position: absolute;
+    top: 50%;
+    text-align: center;
+    background-color: #00000099;
+    color: white;
+    padding: 0.5em;
+    transform: translate(0%, -50%);
+    cursor: pointer;
+    opacity: 0.5%;
+}
+
+.slide_btn_next {
+    right: 0;
+}
+
+.slide_btn_prev {
+    left: 0;
+}
+
+    .slide_btn_next:hover, .slide_btn_prev:hover {
+        background-color: #80808099;
+        color: black;
+    }
+
+/* Media query */
+@media(max-width: 768px) {
+    header #branding,
+    header nav,
+    header nav li,
+    #boxes .box,
+    aside#sidebar {
+        float: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    header {
+        padding-bottom: 20px;
+    }
+
+    #information h1 {
+        margin-top: 40px;
+    }
+
+    .contact input,
+    .contact textarea,
+    .contact label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .c_ul_ques {
+        columns: 1;
+    }
+
+    .c_ul_products {
+        columns: 2;
+    }
+}
+
+@media(max-width: 590px) {
+    .c_ul_products {
+        columns: 1;
+    }
+
+    .slider_image {
+        height: 300px !important;
+    }
+}
