@@ -1,56 +1,56 @@
-﻿@model IEnumerable<API_Usage.Models.Company>
+﻿@model SymbolsInfo
 
 <h2>Symbols</h2>
 <hr />
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>
-        Symbol
-      </th>
-      <th>
-        Name
-      </th>
-      <th>
-        Date
-      </th>
-      <th>
-        Type
-      </th>
-    </tr>
-  </thead>
 
-  <tbody>
+<form asp-controller="Home" asp-action="Symbols" method="get">
+    <select name="symbol">
+        @foreach (var company in Model.Companies)
+        {
+            <option value=@company.symbol selected>@company.name</option>
+        }
+    </select>
+    <input type="submit" value="Search Company" />
+</form>
 
-    @foreach (var item in Model)
-    {
-      <tr>
-        <td>
-          @Html.DisplayFor(modelItem => item.symbol)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.date)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.type)
-        </td>
-      </tr>
-    }
+@if (Model.Current != null)
+{
+    var equity = Model.Current;
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div>
+                        <canvas id="myChart" height="500" width="800"></canvas>
+                    </div>
+                </td>
+                <td>
+                    <a asp-controller="Home" asp-action="SaveCharts" asp-route-symbol="@Model.Current.symbol">
+                        <img src="~/img/button_save-data.png" />
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-    @{
-      Model.Count();
-    }
-    <tr>
-      <td>
-        <a id="dbopt" asp-controller="Home" asp-action="PopulateSymbols"><img src="~/img/button_save-data.png" /></a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <h2>Financials</h2>
+    <hr />
+    @Model.Current.Financials.netIncome;
+
+    <h2>Key Stats</h2>
+    <hr />
+    @Model.Current.KeyStats.sharesOutstanding;
+
+    <h2>Dividends</h2>
+    <hr />
+    @Model.Current.Dividends.First().amount;
+}
+
+
+
+
 <script>
+    getChart("@Model.Dates", "@Model.Prices", "@Model.Volumes", @Model.AvgPrice, @Model.AvgVolume);
     alertDbSave(@ViewBag.dbSuccessComp);
 </script>

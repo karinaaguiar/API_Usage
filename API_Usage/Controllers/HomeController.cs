@@ -35,6 +35,7 @@ namespace API_Usage.Controllers
             dbContext = context;
 
             httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(BASE_URL);
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new
                 System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -56,12 +57,11 @@ namespace API_Usage.Controllers
 
         public List<News> GetNews()
         {
-            string IEXTrading_API_PATH = BASE_URL + "stock/market/news";
+            string IEXTrading_API_PATH = "stock/market/news";
             string newsList = "";
             List<News> news = null;
 
             // connect to the IEXTrading API and retrieve information
-            httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
             HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
 
             // read the Json objects in the API response
@@ -96,17 +96,77 @@ namespace API_Usage.Controllers
         * The Symbols action calls the GetSymbols method that returns a list of Companies.
         * This list of Companies is passed to the Symbols View.
         ****/
-        public IActionResult Symbols()
+        public IActionResult Symbols(string symbol)
         {
             //Set ViewBag variable first
             ViewBag.dbSucessComp = 0;
-            List<Company> companies = GetSymbols();
 
-            //Save companies in TempData, so they do not have to be retrieved again
-            TempData["Companies"] = JsonConvert.SerializeObject(companies);
-            //TempData["Companies"] = companies;
+            //If the Company table is empty, it populates it from API
+            List<Company> companies = new List<Company>();
+            int symbolsCounter = dbContext.Companies.Count();
+            if (symbolsCounter == 0)
+            {
+                companies = GetSymbols();
+                foreach (Company comp in companies)
+                {
+                    dbContext.Companies.Add(comp);
+                }
+                dbContext.SaveChanges();
+            }
+            //If the Company table has data already, then just pull it
+            if (companies.Count() == 0)
+            {
+                companies = dbContext.Companies.ToList();
+            }
 
-            return View(companies);
+            //Check if the user requested information for a specific company
+            Company company = null;
+            string dates = "";
+            string prices = "";
+            string volumes = "";
+            float avgprice = 0;
+            double avgvol = 0;
+            if (symbol != null)
+            {
+                //Get all the symbol information
+                company = dbContext.Companies.Where(c => c.symbol == symbol).First();
+
+                //Verify if the company has all information complete
+                if (company.ChartElements == null)
+                {
+                    //Get info from API and automatically store it on the database.
+                    company.ChartElements = getChartElements(symbol);
+                }
+                if (company.Financials == null)
+                {
+                    //Get info from API and automatically store it on the database.
+                    company.Financials = getFinancials(symbol);
+                }
+                if (company.KeyStats == null)
+                {
+                    //Get info from API and automatically store it on the database.
+                    company.KeyStats = getKeyStats(symbol);
+                }
+                if (company.Dividends == null)
+                {
+                    //Get info from API and automatically store it on the database.
+                    company.Dividends = getDividends(symbol);
+                }
+
+                //Use the company's ChartElement to Generate appropriately formatted 
+                //strings for use by chart.js
+                dates = string.Join(",", company.ChartElements.Select(e => e.date));
+                prices = string.Join(",", company.ChartElements.Select(e => e.high));
+                avgprice = company.ChartElements.Average(e => e.high);
+                //Divide volumes by million to scale appropriately
+                volumes = string.Join(",", company.ChartElements.Select(e => e.volume / 1000000));
+                avgvol = company.ChartElements.Average(e => e.volume) / 1000000;
+            }
+
+            //Create the View model empty
+            SymbolsInfo symbolsInfo = new SymbolsInfo(companies, company, dates, prices, volumes, avgprice, avgvol);
+
+            return View(symbolsInfo);
         }
 
         /// <summary>
@@ -115,12 +175,11 @@ namespace API_Usage.Controllers
         /// <returns>A list of the companies whose information is available</returns>
         public List<Company> GetSymbols()
         {
-            string IEXTrading_API_PATH = BASE_URL + "ref-data/symbols";
+            string IEXTrading_API_PATH = "ref-data/symbols";
             string companyList = "";
             List<Company> companies = null;
 
             // connect to the IEXTrading API and retrieve information
-            httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
             HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
 
             // read the Json objects in the API response
@@ -135,10 +194,162 @@ namespace API_Usage.Controllers
                 // https://stackoverflow.com/a/46280739
                 //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
                 companies = JsonConvert.DeserializeObject<List<Company>>(companyList);
-                companies = companies.GetRange(0, 50);
+                companies = companies.GetRange(0, 500);
             }
 
             return companies;
+        }
+
+        public List<ChartElement> getChartElements(string symbol)
+        {
+            // string to specify information to be retrieved from the API
+            string IEXTrading_API_PATH = "stock/" + symbol + "/chart/1y";
+
+            // initialize objects needed to gather data
+            string charts = "";
+            List<ChartElement> ChartElements = new List<ChartElement>();
+
+            // connect to the API and obtain the response
+            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+
+            // now, obtain the Json objects in the response as a string
+            if (response.IsSuccessStatusCode)
+            {
+                charts = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+                // parse the string into appropriate objects
+                if (!charts.Equals(""))
+                {
+                    List<ChartElement> root = JsonConvert.DeserializeObject<List<ChartElement>>(charts,
+                      new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                    //Make sure the data is in ascending order of date
+                    ChartElements = root.OrderBy(c => c.date).ToList();
+
+                    // The symbol serves as the foreign key in the database and connects the 
+                    // chartElement to the company
+                    // Also save the data on the Database
+                    foreach (ChartElement ChartElement in ChartElements)
+                    {
+                        ChartElement.symbol = symbol;
+                        dbContext.ChartElements.Add(ChartElement);
+                    }
+                    dbContext.SaveChanges();
+                }
+            }
+
+            return ChartElements;
+        }
+
+        public Financial getFinancials(string symbol) {
+            // string to specify information to be retrieved from the API
+            string IEXTrading_API_PATH = "stock/" + symbol + "/financials";
+
+            // initialize objects needed to gather data
+            string financialsString = "";
+            Financial Financials = new Financial();
+
+            // connect to the API and obtain the response
+            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+
+            // now, obtain the Json objects in the response as a string
+            if (response.IsSuccessStatusCode)
+            {
+                financialsString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                
+                // parse the string into appropriate objects
+                if (!financialsString.Equals(""))
+                {
+                    FinanceResponse  FinanResponse = JsonConvert.DeserializeObject<FinanceResponse>(financialsString,
+                      new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    Financials = FinanResponse.financials.OrderBy(f => f.reportDate).Last();
+                    // The symbol serves as the foreign key in the database and connects the 
+                    // financials to the company
+                    // Also save the data on the Database
+                    Financials.symbol = symbol;
+                    dbContext.Financials.Add(Financials);
+                    dbContext.SaveChanges();
+                }
+            }
+
+            return Financials;
+        }
+
+        public KeyStat getKeyStats(string symbol)
+        {
+            // string to specify information to be retrieved from the API
+            string IEXTrading_API_PATH = "stock/" + symbol + "/stats";
+
+            // initialize objects needed to gather data
+            string keyStatString = "";
+            KeyStat KeyStats = new KeyStat();
+
+            // connect to the API and obtain the response
+            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+
+            // now, obtain the Json objects in the response as a string
+            if (response.IsSuccessStatusCode)
+            {
+                keyStatString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+                // parse the string into appropriate objects
+                if (!keyStatString.Equals(""))
+                {
+                     KeyStats = JsonConvert.DeserializeObject<KeyStat>(keyStatString,
+                      new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                    // The symbol serves as the foreign key in the database and connects the 
+                    // keyStat to the company
+                    // Also save the data on the Database
+                    KeyStats.symbol = symbol;
+                    dbContext.KeyStats.Add(KeyStats);
+                    dbContext.SaveChanges();
+                }
+            }
+
+            return KeyStats;
+        }
+
+        public List<Dividend> getDividends(string symbol)
+        {
+            // string to specify information to be retrieved from the API
+            string IEXTrading_API_PATH = "stock/" + symbol + "/dividends/1y";
+
+            // initialize objects needed to gather data
+            string dividendList = "";
+            List<Dividend> Dividends = new List<Dividend>();
+
+
+            // connect to the API and obtain the response
+            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+
+            // now, obtain the Json objects in the response as a string
+            if (response.IsSuccessStatusCode)
+            {
+                dividendList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+                // parse the string into appropriate objects
+                if (!dividendList.Equals(""))
+                {
+                    Dividends = JsonConvert.DeserializeObject<List<Dividend>>(dividendList,
+                      new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                    //Make sure the data is in ascending order of date
+                    Dividends = Dividends.OrderBy(c => c.paymentDate).ToList();
+                }
+
+                // The symbol serves as the foreign key in the database and connects the 
+                // Dividends to the company
+                // Also save the data on the Database
+                foreach (Dividend Dividend in Dividends)
+                {
+                    Dividend.symbol = symbol;
+                    dbContext.Dividends.Add(Dividend);
+                }
+                dbContext.SaveChanges();
+            }
+
+            return Dividends;
         }
 
         public IActionResult IPO()
@@ -151,12 +362,11 @@ namespace API_Usage.Controllers
 
         public String GetIPO()
         {
-            string IEXTrading_API_PATH = BASE_URL + "/stock/market/upcoming-ipos";
+            string IEXTrading_API_PATH = "/stock/market/upcoming-ipos";
             string ipoList = "";
             //List<Company> companies = null;
 
             // connect to the IEXTrading API and retrieve information
-            httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
             HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
 
             // read the Json objects in the API response
@@ -196,29 +406,29 @@ namespace API_Usage.Controllers
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public IActionResult Chart(string symbol)
+        /*public IActionResult Chart(string iexId)
         {
             //Set ViewBag variable first
             ViewBag.dbSuccessChart = 0;
             List<Equity> equities = new List<Equity>();
 
-            if (symbol != null)
+            if (iexId != null)
             {
-                equities = GetChart(symbol);
+                equities = GetChart(iexId);
                 equities = equities.OrderBy(c => c.date).ToList(); //Make sure the data is in ascending order of date.
             }
 
             CompaniesEquities companiesEquities = getCompaniesEquitiesModel(equities);
 
             return View(companiesEquities);
-        }
+        }*/
 
         /// <summary>
         /// Calls the IEX stock API to get 1 year's chart for the supplied symbol
         /// </summary>
         /// <param name="symbol">Stock symbol of the company whose quotes are to be retrieved</param>
         /// <returns></returns>
-        public List<Equity> GetChart(string symbol)
+        /*public List<Equity> GetChart(string symbol)
         {
             // string to specify information to be retrieved from the API
             string IEXTrading_API_PATH = BASE_URL + "stock/" + symbol + "/batch?types=chart&range=1y";
@@ -253,7 +463,7 @@ namespace API_Usage.Controllers
             }
 
             return Equities;
-        }
+        }*/
 
         /// <summary>
         /// Call the ClearTables method to delete records from a table or all tables.
@@ -261,21 +471,21 @@ namespace API_Usage.Controllers
         /// </summary>
         /// <param name="tableToDel">Table to clear</param>
         /// <returns>Refresh view</returns>
-        public IActionResult Refresh(string tableToDel)
+        /*public IActionResult Refresh(string tableToDel)
         {
             ClearTables(tableToDel);
             Dictionary<string, int> tableCount = new Dictionary<string, int>();
             tableCount.Add("Companies", dbContext.Companies.Count());
             tableCount.Add("Charts", dbContext.Equities.Count());
             return View(tableCount);
-        }
+        }*/
 
         /// <summary>
         /// save the quotes (equities) in the database
         /// </summary>
         /// <param name="symbol">Company whose quotes are to be saved</param>
         /// <returns>Chart view for the company</returns>
-        public IActionResult SaveCharts(string symbol)
+        /*public IActionResult SaveCharts(string symbol)
         {
             List<Equity> equities = GetChart(symbol);
 
@@ -295,14 +505,14 @@ namespace API_Usage.Controllers
             ViewBag.dbSuccessChart = 1;
             CompaniesEquities companiesEquities = getCompaniesEquitiesModel(equities);
             return View("Chart", companiesEquities);
-        }
+        }*/
 
         /// <summary>
         /// Use the data provided to assemble the ViewModel
         /// </summary>
         /// <param name="equities">Quotes to dsiplay</param>
         /// <returns>The view model to include </returns>
-        public CompaniesEquities getCompaniesEquitiesModel(List<Equity> equities)
+        /*public CompaniesEquities getCompaniesEquitiesModel(List<Equity> equities)
         {
             List<Company> companies = dbContext.Companies.ToList();
 
@@ -323,7 +533,7 @@ namespace API_Usage.Controllers
             double avgvol = equities.Average(e => e.volume) / 1000000;
 
             return new CompaniesEquities(companies, equities.Last(), dates, prices, volumes, avgprice, avgvol);
-        }
+        }*/
 
         /// <summary>
         /// Save the available symbols in the database
@@ -357,7 +567,7 @@ namespace API_Usage.Controllers
         /// Delete all records from tables
         /// </summary>
         /// <param name="tableToDel">Table to clear</param>
-        public void ClearTables(string tableToDel)
+        /*public void ClearTables(string tableToDel)
         {
             if ("all".Equals(tableToDel))
             {
@@ -377,6 +587,6 @@ namespace API_Usage.Controllers
                 dbContext.Equities.RemoveRange(dbContext.Equities);
             }
             dbContext.SaveChanges();
-        }
+        }*/
     }
 }
