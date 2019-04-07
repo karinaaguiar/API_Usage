@@ -2,59 +2,63 @@
     ViewData["Title"] = "About";
 }
 
-<h2>About Q-Stock Application</h2>
-<hr />
+<section>
+    <div class="container">
+        <h2>About Q-Stock Application</h2>
+        <hr />
 
-<div>
-    <p>
-        This application let's you quickly (Q) fetch stock data from IEX via their public
-        <a target="_blank" href="https://iextrading.com/developer/">API</a>. This site is conceptually very similar to Yahoo Finance
-        <br />
-        <br />
-        For the purpose of this assignment we have chosen to display the details regarding News (On Home Page), Symbols, Upcoming IPO's, and Watchlists.
-        <br />
-        <br />
-        The <a asp-area="" asp-controller="Home" asp-action="Symbols">Symbols</a> tab shows a company list (limited to 500) from which you can
-        select one to check out diverse information including price/volume chart, key stats, finances, and dividens. The information
-        is pulled from our SQL database which is populated from the IEX API. Once a Symbol is selected it is shown an Update button that will
-        pull updated data from the API that will update the database for that specific Symbol.
-        <br />
-        The <a asp-area="" asp-controller="Home" asp-action="IPO">Upcoming IPO</a> tab let's you view the IPO [Initial public offering] issued by companies to the public.
-        The IPO's list is saved in the local database. The data is obtained from
-        <a target="_blank" href="https://iextrading.com/developer/docs/#ipo-calendar">IEX IPO API</a>
-        <br />
-        The <a asp-area="" asp-controller="Home" asp-action="Watchlists">Watchlist</a> tab let's you refresh the local database, that is, remove all its contents.
-    </p>
-    <p>
-        The application demonstrates the following:
-        <ul>
-            <li>Connection to REST API (the example uses IEXTrading, an easy-to-use API that provides stock data)</li>
-            <li>Parsing the Json objects returned from the API</li>
-            <li>Modeling API results as entities</li>
-            <li>Persisting data to a relational database</li>
-        </ul>
-    </p>
-</div>
+        <div>
+            <p>
+                This application let's you quickly (Q) fetch stock data from IEX via their public
+                <a target="_blank" href="https://iextrading.com/developer/">API</a>. This site is conceptually very similar to Yahoo Finance
+                <br />
+                <br />
+                For the purpose of this assignment we have chosen to display the details regarding News (On Home Page), Symbols, Upcoming IPO's, and Watchlists.
+                <br />
+                <br />
+                The <a asp-area="" asp-controller="Home" asp-action="Symbols">Symbols</a> tab shows a company list (limited to 500) from which you can
+                select one to check out diverse information including price/volume chart, key stats, finances, and dividens. The information
+                is pulled from our SQL database which is populated from the IEX API. Once a Symbol is selected it is shown an Update button that will
+                pull updated data from the API that will update the database for that specific Symbol.
+                <br />
+                The <a asp-area="" asp-controller="Home" asp-action="IPO">Upcoming IPO</a> tab let's you view the IPO [Initial public offering] issued by companies to the public.
+                The IPO's list is saved in the local database. The data is obtained from
+                <a target="_blank" href="https://iextrading.com/developer/docs/#ipo-calendar">IEX IPO API</a>
+                <br />
+                The <a asp-area="" asp-controller="Home" asp-action="Watchlists">Watchlist</a> tab let's you refresh the local database, that is, remove all its contents.
+            </p>
+            <p>
+                The application demonstrates the following:
+                <ul>
+                    <li>Connection to REST API (the example uses IEXTrading, an easy-to-use API that provides stock data)</li>
+                    <li>Parsing the Json objects returned from the API</li>
+                    <li>Modeling API results as entities</li>
+                    <li>Persisting data to a relational database</li>
+                </ul>
+            </p>
+        </div>
 
-<h2>About Q-Stock Team Members</h2>
-<hr />
+        <h2>About Q-Stock Team Members</h2>
+        <hr />
 
-<div>
-    <p>
-        The team members involved in creating this project are :
-        <ul>
-            <li>Karina Aguiar Goncalves </li>
-            <li>Quynh Mai</li>
-            <li>Malathy Munusamy</li>
-        </ul>
-    </p>
-</div>
+        <div>
+            <p>
+                The team members involved in creating this project are :
+                <ul>
+                    <li>Karina Aguiar Goncalves </li>
+                    <li>Quynh Mai</li>
+                    <li>Malathy Munusamy</li>
+                </ul>
+            </p>
+        </div>
 
-<h2>About GitHub</h2>
-<hr />
+        <h2>About GitHub</h2>
+        <hr />
 
-<div>
-    <p>
-        Please click on <a href="https://github.com/karinaaguiar/API_Usage" target="_blank">GitHub</a> to navigate to our GitHub profile.
-    </p>
-</div>
+        <div>
+            <p>
+                Please click on <a href="https://github.com/karinaaguiar/API_Usage" target="_blank">GitHub</a> to navigate to our GitHub profile.
+            </p>
+        </div>
+    </div>
+</section>
