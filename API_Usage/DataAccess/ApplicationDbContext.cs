@@ -12,6 +12,5 @@ namespace API_Usage.DataAccess
         public DbSet<Financial> Financials { get; set; }
         public DbSet<KeyStat> KeyStats { get; set; }
         public DbSet<Dividend> Dividends { get; set; }
-        public DbSet<UpcomingIPO> UpcomingIPOs { get; set; }
     }
 }

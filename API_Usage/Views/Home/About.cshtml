@@ -11,18 +11,15 @@
         <a href="https://iextrading.com/developer/">API</a>.
         <br />
         <br />
-        For the purpose of this assignment we have chosen to display the details regarding Symbols, Upcoming IPO's and Watchlists from IEXtraing website
-        <br />
-        <br />
         The <a asp-area="" asp-controller="Home" asp-action="Symbols">Symbols</a> tab fetches symbols data from the
         <a href="https://iextrading.com/developer/docs/#reference-data">IEX Reference API </a> and displays the results.
         This data can also be saved in the local database.
         <br />
-        The <a asp-area="" asp-controller="Home" asp-action="IPO">Upcoming IPO</a> tab let's you view the IPO [Initial public offering] issued by company to public.
-        The IPO's list can also be saved in the local database. The data is obtained from
-        <a href="https://iextrading.com/developer/docs/#ipo-calendar">IEX IPO API</a>
+        The <a asp-area="" asp-controller="Home" asp-action="Chart">Chart</a> tab let's you select a Company(symbol) and fetches a quote from
+        <a href="https://iextrading.com/developer/docs/#stocks">IEX Stock API</a>.
+        The quote can also be saved in the local database.
         <br />
-        The <a asp-area="" asp-controller="Home" asp-action="Watchlist">Watchlist</a> tab let's you refresh the local database, that is, remove all its contents.
+        The <a asp-area="" asp-controller="Home" asp-action="Refresh">Refresh</a> tab let's you refresh the local database, that is, remove all its contents.
     </p>
     <p>
         The application demonstrates the following -
@@ -40,17 +37,21 @@
 
 <div>
     <p>
-        The team members involved in creating this project are :
-        <ul>
-            <li>Karina Aguiar Goncalves </li>
-            <li>Quynh Mai</li>
-            <li>Malathy Munusamy</li>
-        </ul>
+        This application let's you quickly (Q) fetch stock data from IEX via their public
+        <a href="https://iextrading.com/developer/">API</a>.
+        <br />
+        <br />
+        The <a asp-area="" asp-controller="Home" asp-action="Symbols">Symbols</a> tab fetches symbols data from the
+        <a href="https://iextrading.com/developer/docs/#reference-data">IEX Reference API </a> and displays the results.
+        This data can also be saved in the local database.
+        <br />
+        The <a asp-area="" asp-controller="Home" asp-action="Chart">Chart</a> tab let's you select a Company(symbol) and fetches a quote from
+        <a href="https://iextrading.com/developer/docs/#stocks">IEX Stock API</a>.
+        The quote can also be saved in the local database.
+        <br />
+        The <a asp-area="" asp-controller="Home" asp-action="Refresh">Refresh</a> tab let's you refresh the local database, that is, remove all its contents.
     </p>
-    <h2>GitHub profile link</h2>
-    <hr />
     <p>
-        Please click on <a href="https://github.com/karinaaguiar/API_Usage" target="_blank">GitHub</a> to navigate to our GitHub profile.
-        
+        <a href="https://github.com/karinaaguiar/API_Usage" target="_blank">GitHub</a>
     </p>
 </div>

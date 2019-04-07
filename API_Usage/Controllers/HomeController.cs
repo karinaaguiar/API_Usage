@@ -352,7 +352,41 @@ namespace API_Usage.Controllers
             return Dividends;
         }
 
-        
+        public IActionResult IPO()
+        {
+            //Set ViewBag variable first
+            ViewBag.dbSucessComp = 0;
+            String ipos = GetIPO();
+            return View("ipo", ipos);
+        }
+
+        public String GetIPO()
+        {
+            string IEXTrading_API_PATH = "/stock/market/upcoming-ipos";
+            string ipoList = "";
+            //List<Company> companies = null;
+
+            // connect to the IEXTrading API and retrieve information
+            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+
+            // read the Json objects in the API response
+            if (response.IsSuccessStatusCode)
+            {
+                ipoList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+
+            // now, parse the Json strings as C# objects
+            /*if (!ipoList.Equals(""))
+            {
+                // https://stackoverflow.com/a/46280739
+                //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
+                companies = JsonConvert.DeserializeObject<List<Company>>(companyList);
+                companies = companies.GetRange(0, 50);
+            }*/
+
+            return ipoList;
+        }
+
         public IActionResult About()
         {
             return View();
@@ -554,49 +588,5 @@ namespace API_Usage.Controllers
             }
             dbContext.SaveChanges();
         }*/
-
-        public List<UpcomingIPO> GetUpcomingIPOs()
-        {
-            string IEXTrading_API_PATH = "stock/market/upcoming-ipos";
-            string upcomingIPOsList = "";
-            List<UpcomingIPO> upcomingIPOs = null;
-
-            // connect to the IEXTrading API and retrieve information
-            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
-
-            // read the Json objects in the API response
-            if (response.IsSuccessStatusCode)
-            {
-                upcomingIPOsList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            }
-            string[] data = upcomingIPOsList.Split("viewData");
-            // now, parse the Json strings as C# objects
-            if (!upcomingIPOsList.Equals(""))
-            {
-                upcomingIPOs = JsonConvert.DeserializeObject<List<UpcomingIPO>>(data[1].Substring(2, data[1].Length - 3));
-            }
-            List<string> symbols = dbContext.UpcomingIPOs.Select(x => x.symbol).ToList();
-            foreach (string symbol in symbols)
-            {
-                dbContext.UpcomingIPOs.Remove(dbContext.UpcomingIPOs.Where(c => c.symbol == symbol).First());
-            }
-            dbContext.SaveChanges();
-            foreach (UpcomingIPO ipo in upcomingIPOs)
-            {
-                dbContext.UpcomingIPOs.Add(ipo);
-            }
-            dbContext.SaveChanges();
-
-            return upcomingIPOs;
-        }
-
-
-        public IActionResult IPO()
-        {
-            //Set ViewBag variable first
-            ViewBag.dbSucessComp = 0;
-            List<UpcomingIPO> ipos = GetUpcomingIPOs();
-            return View("ipo", ipos);
-        }
     }
 }
