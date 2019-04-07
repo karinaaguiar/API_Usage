@@ -72,7 +72,7 @@ namespace API_Usage.Controllers
             }
 
             // now, parse the Json strings as C# objects
-            if (!newsList.Equals(""))
+            if (!newsList.Equals("") && !newsList.Equals("{}"))
             {
                 news = JsonConvert.DeserializeObject<List<News>>(newsList);
             }
@@ -195,7 +195,7 @@ namespace API_Usage.Controllers
             }
 
             // now, parse the Json strings as C# objects
-            if (!companyList.Equals(""))
+            if (!companyList.Equals("") && !companyList.Equals("{}"))
             {
                 // https://stackoverflow.com/a/46280739
                 //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
@@ -224,7 +224,7 @@ namespace API_Usage.Controllers
                 charts = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                 // parse the string into appropriate objects
-                if (!charts.Equals(""))
+                if (!charts.Equals("") && !charts.Equals("{}"))
                 {
                     //If update, first remove all the entities associated with the symbol, and then insert it again.
                     //Why do not update? because we cannot track a specific ChartElement
@@ -275,7 +275,7 @@ namespace API_Usage.Controllers
                 financialsString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 
                 // parse the string into appropriate objects
-                if (!financialsString.Equals(""))
+                if (!financialsString.Equals("") && !financialsString.Equals("{}"))
                 {
                     //If update, first remove all the entities associated with the symbol, and then insert it again.
                     //Why do not update? because we cannot track a specific ChartElement
@@ -321,7 +321,7 @@ namespace API_Usage.Controllers
                 keyStatString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                 // parse the string into appropriate objects
-                if (!keyStatString.Equals(""))
+                if (!keyStatString.Equals("") && !keyStatString.Equals("{}"))
                 {
                     //If update, first remove all the entities associated with the symbol, and then insert it again.
                     //Why do not update? because we cannot track a specific ChartElement
@@ -367,7 +367,7 @@ namespace API_Usage.Controllers
                 dividendList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                 // parse the string into appropriate objects
-                if (!dividendList.Equals(""))
+                if (!dividendList.Equals("") && !dividendList.Equals("{}"))
                 {
                     //If update, first remove all the entities associated with the symbol, and then insert it again.
                     //Why do not update? because we cannot track a specific ChartElement
@@ -634,7 +634,7 @@ namespace API_Usage.Controllers
             dbContext.SaveChanges();
 
             // now, parse the Json strings as C# objects
-            if (!ipoList.Equals(""))
+            if (!ipoList.Equals("") && !ipoList.Equals("{}"))
             {
                 ipos = JsonConvert.DeserializeObject<List<UpcomingIPO>>(data[1].Substring(2,data[1].Length-3));
                 
