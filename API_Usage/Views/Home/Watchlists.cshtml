@@ -17,17 +17,23 @@
                     <tr>
                         <th align="center">Symbol</th>
                         <th align="center">Company Name</th>
+                        <th align="center">Primary Exchange</th>
+                        <th align="center">Sector</th>
+                        <th align="center">Calculated Price</th>
                         <th align="center">Latest Price</th>
-                        <th align="center">Latest Source</th>
+                        <th align="center">Change</th>
                     </tr>
                     @foreach (var quote in Model.mostActive)
                     {
-                        <tr>
-                            <td align="center">@quote.symbol</td>
-                            <td align="left">@quote.companyName</td>
-                            <td align="right">@quote.latestPrice</td>
-                            <td align="left">@quote.latestSource</td>
-                        </tr>
+                    <tr>
+                        <td align="center">@quote.symbol</td>
+                        <td align="left">@quote.companyName</td>
+                        <td align="left">@quote.primaryExchange</td>
+                        <td align="left">@quote.sector</td>
+                        <td align="center">@quote.calculationPrice</td>
+                        <td align="center">$@quote.latestPrice</td>
+                        <td align="center">$@quote.change</td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -46,16 +52,22 @@
                     <tr>
                         <th align="center">Symbol</th>
                         <th align="center">Company Name</th>
+                        <th align="center">Primary Exchange</th>
+                        <th align="center">Sector</th>
+                        <th align="center">Calculated Price</th>
                         <th align="center">Latest Price</th>
-                        <th align="center">Latest Source</th>
+                        <th align="center">Change</th>
                     </tr>
                     @foreach (var quote in Model.gainer)
                     {
                     <tr>
                         <td align="center">@quote.symbol</td>
                         <td align="left">@quote.companyName</td>
-                        <td align="right">@quote.latestPrice</td>
-                        <td align="left">@quote.latestSource</td>
+                        <td align="left">@quote.primaryExchange</td>
+                        <td align="left">@quote.sector</td>
+                        <td align="center">@quote.calculationPrice</td>
+                        <td align="center">$@quote.latestPrice</td>
+                        <td align="center">$@quote.change</td>
                     </tr>
                     }
                 </tbody>
@@ -74,16 +86,22 @@
                     <tr>
                         <th align="center">Symbol</th>
                         <th align="center">Company Name</th>
+                        <th align="center">Primary Exchange</th>
+                        <th align="center">Sector</th>
+                        <th align="center">Calculated Price</th>
                         <th align="center">Latest Price</th>
-                        <th align="center">Latest Source</th>
+                        <th align="center">Change</th>
                     </tr>
                     @foreach (var quote in Model.loser)
                     {
                     <tr>
                         <td align="center">@quote.symbol</td>
                         <td align="left">@quote.companyName</td>
-                        <td align="right">@quote.latestPrice</td>
-                        <td align="left">@quote.latestSource</td>
+                        <td align="left">@quote.primaryExchange</td>
+                        <td align="left">@quote.sector</td>
+                        <td align="center">@quote.calculationPrice</td>
+                        <td align="center">$@quote.latestPrice</td>
+                        <td align="center">$@quote.change</td>
                     </tr>
                     }
                 </tbody>

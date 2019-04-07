@@ -19,10 +19,11 @@ namespace API_Usage.Models
     {
         public string symbol { get; set; }
         public string companyName { get; set; }
+        public string sector { get; set; }
         public string primaryExchange { get; set; }
         public string calculationPrice { get; set; }
         public float latestPrice { get; set; }
-        public string latestSource { get; set; }
+        public float change { get; set; }
     }
 
     public class ChartElement
