@@ -51,4 +51,11 @@ namespace API_Usage.Models
         public string related { get; set; }
         public string image { get; set; }
     }
+
+    public class WatchListInfo
+    {
+        public List<Quote> mostActive { get; set; }
+        public List<Quote> gainer { get; set; }
+        public List<Quote> loser { get; set; }
+    }
 }

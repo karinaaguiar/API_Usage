@@ -82,15 +82,36 @@ namespace API_Usage.Controllers
 
         public IActionResult Watchlists()
         {
-            //Set ViewBag variable first
-            /*ViewBag.dbSucessComp = 0;
-            List<News> news = GetNews();
+            WatchListInfo info = new WatchListInfo();
+            info.mostActive = GetQuotes("stock/market/list/mostactive");
+            info.gainer = GetQuotes("stock/market/list/gainers");
+            info.loser = GetQuotes("stock/market/list/losers");
 
-            //Save companies in TempData, so they do not have to be retrieved again
-            TempData["News"] = JsonConvert.SerializeObject(news);
+            return View(info);
+        }
 
-            return View(news);*/
-            return View();
+        public List<Quote> GetQuotes(String quotePath)
+        {
+            string rawResult = "";
+            List<Quote> quotes = null;
+
+            // connect to the IEXTrading API and retrieve information
+            HttpResponseMessage response = httpClient.GetAsync(quotePath).GetAwaiter().GetResult();
+
+            // read the Json objects in the API response
+            if (response.IsSuccessStatusCode)
+            {
+                rawResult = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+
+            // now, parse the Json strings as C# objects
+            if (!rawResult.Equals(""))
+            {
+                quotes = JsonConvert.DeserializeObject<List<Quote>>(rawResult);
+                //quotes = quotes.GetRange(0, 500);
+            }
+
+            return quotes;
         }
 
         /****

@@ -15,6 +15,16 @@ namespace API_Usage.Models
         public List <Dividend> Dividends { get; set; }
     }
 
+    public class Quote
+    {
+        public string symbol { get; set; }
+        public string companyName { get; set; }
+        public string primaryExchange { get; set; }
+        public string calculationPrice { get; set; }
+        public float latestPrice { get; set; }
+        public string latestSource { get; set; }
+    }
+
     public class ChartElement
     {
         [Key]

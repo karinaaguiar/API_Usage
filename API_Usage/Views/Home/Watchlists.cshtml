@@ -1,7 +1,98 @@
-﻿
+﻿@model WatchListInfo
 @{
     ViewData["Title"] = "Watchlists";
 }
 
-<h2>Watchlists</h2>
+<section>
+    <div class="container">
+        <h2>Watchlist</h2>
+        <hr />
 
+        <h2 class="qstock-category">Most Active</h2>
+
+        @if (Model.mostActive.Count > 0)
+        {
+            <table class="table-style-one">
+                <tbody>
+                    <tr>
+                        <th align="center">Symbol</th>
+                        <th align="center">Company Name</th>
+                        <th align="center">Latest Price</th>
+                        <th align="center">Latest Source</th>
+                    </tr>
+                    @foreach (var quote in Model.mostActive)
+                    {
+                        <tr>
+                            <td align="center">@quote.symbol</td>
+                            <td align="left">@quote.companyName</td>
+                            <td align="right">@quote.latestPrice</td>
+                            <td align="left">@quote.latestSource</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        } else {
+        <p>
+            No quotes available for this list
+        </p>
+        }
+
+
+        <h2 class="qstock-category">Gainers</h2>
+        @if (Model.gainer.Count > 0)
+        {
+            <table class="table-style-one">
+                <tbody>
+                    <tr>
+                        <th align="center">Symbol</th>
+                        <th align="center">Company Name</th>
+                        <th align="center">Latest Price</th>
+                        <th align="center">Latest Source</th>
+                    </tr>
+                    @foreach (var quote in Model.gainer)
+                    {
+                    <tr>
+                        <td align="center">@quote.symbol</td>
+                        <td align="left">@quote.companyName</td>
+                        <td align="right">@quote.latestPrice</td>
+                        <td align="left">@quote.latestSource</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        } else {
+        <p>
+            No quotes available for this list
+        </p>
+        }
+
+        <h2 class="qstock-category">Losers</h2>
+        @if (Model.loser.Count > 0)
+        {
+            <table class="table-style-one">
+                <tbody>
+                    <tr>
+                        <th align="center">Symbol</th>
+                        <th align="center">Company Name</th>
+                        <th align="center">Latest Price</th>
+                        <th align="center">Latest Source</th>
+                    </tr>
+                    @foreach (var quote in Model.loser)
+                    {
+                    <tr>
+                        <td align="center">@quote.symbol</td>
+                        <td align="left">@quote.companyName</td>
+                        <td align="right">@quote.latestPrice</td>
+                        <td align="left">@quote.latestSource</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        } else {
+        <p>
+            No quotes available for this list
+        </p>
+        }
+
+    </div>
+</section>
