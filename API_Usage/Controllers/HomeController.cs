@@ -138,7 +138,7 @@ namespace API_Usage.Controllers
                                               First();
 
                 //Verify if the company has all information complete
-                if (company.ChartElements == null || update)
+                if (company.ChartElements == null || company.ChartElements.Count() ==0 || update)
                 {
                     //Get info from API and automatically store it on the database.
                     company.ChartElements = getChartElements(symbol, update);
@@ -153,7 +153,7 @@ namespace API_Usage.Controllers
                     //Get info from API and automatically store it on the database.
                     company.KeyStats = getKeyStats(symbol, update);
                 }
-                if (company.Dividends == null || update)
+                if (company.Dividends == null || company.Dividends.Count() == 0 || update)
                 {
                     //Get info from API and automatically store it on the database.
                     company.Dividends = getDividends(symbol, update);
@@ -200,7 +200,7 @@ namespace API_Usage.Controllers
                 // https://stackoverflow.com/a/46280739
                 //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
                 companies = JsonConvert.DeserializeObject<List<Company>>(companyList);
-                //companies = companies.GetRange(0, 500);
+                companies = companies.GetRange(0, 500);
             }
 
             return companies;
@@ -400,8 +400,6 @@ namespace API_Usage.Controllers
 
             return Dividends;
         }
-
-        
 
         public IActionResult About()
         {
