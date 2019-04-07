@@ -1,10 +1,103 @@
-﻿@model String
+﻿@model IEnumerable<API_Usage.Models.UpcomingIPO>
 
 @{
     ViewData["Title"] = "IPO";
 }
 
-<h2>IPO</h2>
+<style>
+    table {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-@Model
+        table td, table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
 
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #353637;
+            color: white;
+        }
+</style>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Symbol
+            </th>
+            <th>
+                Company
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Shares
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Float
+            </th>
+            <th>
+                Percent
+            </th>
+            <th>
+                Market
+            </th>
+            <th>
+                Expected
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.symbol)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.company)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.shares)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.floatValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.percent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.market)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.expected)
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>
