@@ -133,4 +133,18 @@ namespace API_Usage.Models
         public string type { get; set; }
         public string qualified { get; set; }
     }
+
+    public class UpcomingIPO
+    {
+        [Key]
+        public string symbol { get; set; }
+        public string company { get; set; }
+        public string price { get; set; }
+        public string shares { get; set; }
+        public string amount { get; set; }
+        public string floatValue { get; set; }
+        public string percent { get; set; }
+        public string market { get; set; }
+        public string expected { get; set; }
+    }
 }
