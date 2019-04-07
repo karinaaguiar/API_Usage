@@ -92,6 +92,7 @@ header {
         font-size: 55px;
         margin-bottom: 10px;
     }
+
     #information a {
         color: #ffffff;
     }
@@ -277,6 +278,60 @@ aside#sidebar {
     .slide_btn_next:hover, .slide_btn_prev:hover {
         background-color: #80808099;
         color: black;
+    }
+
+/*Select */
+select#soflow-color {
+    -webkit-appearance: button;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -webkit-user-select: none;
+    background-position: 97% center;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    color: #fff;
+    background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#32a0c2, #32a0c2 40%, #32a0c2);
+    background-color: #32a0c2;
+    font-size: inherit;
+    margin: 20px;
+    overflow: hidden;
+    padding: 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 400px;
+    border-radius: 20px;
+    padding-left: 15px;
+}
+
+/*Table*/
+table.table-style-one {
+    font-family: verdana,arial,sans-serif;
+    font-size: 11px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #3A3A3A;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+}
+
+    table.table-style-one th {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #3A3A3A;
+        background-color: #B3B3B3;
+    }
+
+    table.table-style-one td {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #3A3A3A;
+        background-color: #ffffff;
     }
 
 /* Media query */

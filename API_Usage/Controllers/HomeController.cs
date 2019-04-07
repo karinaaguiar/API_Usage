@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 /*
  * Acknowledgments
@@ -96,7 +97,7 @@ namespace API_Usage.Controllers
         * The Symbols action calls the GetSymbols method that returns a list of Companies.
         * This list of Companies is passed to the Symbols View.
         ****/
-        public IActionResult Symbols(string symbol)
+        public IActionResult Symbols(string symbol, bool update)
         {
             //Set ViewBag variable first
             ViewBag.dbSucessComp = 0;
@@ -129,28 +130,33 @@ namespace API_Usage.Controllers
             if (symbol != null)
             {
                 //Get all the symbol information
-                company = dbContext.Companies.Where(c => c.symbol == symbol).First();
+                company = dbContext.Companies.Include(c => c.ChartElements).
+                                              Include(c => c.Financials).
+                                              Include(c => c.KeyStats).
+                                              Include(c => c.Dividends).
+                                              Where(c => c.symbol == symbol).
+                                              First();
 
                 //Verify if the company has all information complete
-                if (company.ChartElements == null)
+                if (company.ChartElements == null || update)
                 {
                     //Get info from API and automatically store it on the database.
-                    company.ChartElements = getChartElements(symbol);
+                    company.ChartElements = getChartElements(symbol, update);
                 }
-                if (company.Financials == null)
+                if (company.Financials == null || update)
                 {
                     //Get info from API and automatically store it on the database.
-                    company.Financials = getFinancials(symbol);
+                    company.Financials = getFinancials(symbol, update);
                 }
-                if (company.KeyStats == null)
+                if (company.KeyStats == null || update)
                 {
                     //Get info from API and automatically store it on the database.
-                    company.KeyStats = getKeyStats(symbol);
+                    company.KeyStats = getKeyStats(symbol, update);
                 }
-                if (company.Dividends == null)
+                if (company.Dividends == null || update)
                 {
                     //Get info from API and automatically store it on the database.
-                    company.Dividends = getDividends(symbol);
+                    company.Dividends = getDividends(symbol, update);
                 }
 
                 //Use the company's ChartElement to Generate appropriately formatted 
@@ -194,13 +200,13 @@ namespace API_Usage.Controllers
                 // https://stackoverflow.com/a/46280739
                 //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
                 companies = JsonConvert.DeserializeObject<List<Company>>(companyList);
-                companies = companies.GetRange(0, 500);
+                //companies = companies.GetRange(0, 500);
             }
 
             return companies;
         }
 
-        public List<ChartElement> getChartElements(string symbol)
+        public List<ChartElement> getChartElements(string symbol, bool update)
         {
             // string to specify information to be retrieved from the API
             string IEXTrading_API_PATH = "stock/" + symbol + "/chart/1y";
@@ -220,6 +226,17 @@ namespace API_Usage.Controllers
                 // parse the string into appropriate objects
                 if (!charts.Equals(""))
                 {
+                    //If update, first remove all the entities associated with the symbol, and then insert it again.
+                    //Why do not update? because we cannot track a specific ChartElement
+                    //Since our ID is an autoincrement.
+                    if (update)
+                    {
+                        foreach (ChartElement currentEntity in dbContext.ChartElements.Where(c => c.symbol == symbol).ToList())
+                        {
+                            dbContext.Remove(currentEntity);
+                        }
+                    }
+
                     List<ChartElement> root = JsonConvert.DeserializeObject<List<ChartElement>>(charts,
                       new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
@@ -241,7 +258,7 @@ namespace API_Usage.Controllers
             return ChartElements;
         }
 
-        public Financial getFinancials(string symbol) {
+        public Financial getFinancials(string symbol, bool update) {
             // string to specify information to be retrieved from the API
             string IEXTrading_API_PATH = "stock/" + symbol + "/financials";
 
@@ -260,6 +277,17 @@ namespace API_Usage.Controllers
                 // parse the string into appropriate objects
                 if (!financialsString.Equals(""))
                 {
+                    //If update, first remove all the entities associated with the symbol, and then insert it again.
+                    //Why do not update? because we cannot track a specific ChartElement
+                    //Since our ID is an autoincrement.
+                    if (update)
+                    {
+                        foreach (Financial currentEntity in dbContext.Financials.Where(f => f.symbol == symbol).ToList())
+                        {
+                            dbContext.Remove(currentEntity);
+                        }
+                    }
+
                     FinanceResponse  FinanResponse = JsonConvert.DeserializeObject<FinanceResponse>(financialsString,
                       new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     Financials = FinanResponse.financials.OrderBy(f => f.reportDate).Last();
@@ -275,7 +303,7 @@ namespace API_Usage.Controllers
             return Financials;
         }
 
-        public KeyStat getKeyStats(string symbol)
+        public KeyStat getKeyStats(string symbol, bool update)
         {
             // string to specify information to be retrieved from the API
             string IEXTrading_API_PATH = "stock/" + symbol + "/stats";
@@ -295,7 +323,18 @@ namespace API_Usage.Controllers
                 // parse the string into appropriate objects
                 if (!keyStatString.Equals(""))
                 {
-                     KeyStats = JsonConvert.DeserializeObject<KeyStat>(keyStatString,
+                    //If update, first remove all the entities associated with the symbol, and then insert it again.
+                    //Why do not update? because we cannot track a specific ChartElement
+                    //Since our ID is an autoincrement.
+                    if (update)
+                    {
+                        foreach (KeyStat currentEntity in dbContext.KeyStats.Where(k => k.symbol == symbol).ToList())
+                        {
+                            dbContext.Remove(currentEntity);
+                        }
+                    }
+
+                    KeyStats = JsonConvert.DeserializeObject<KeyStat>(keyStatString,
                       new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                     // The symbol serves as the foreign key in the database and connects the 
@@ -310,7 +349,7 @@ namespace API_Usage.Controllers
             return KeyStats;
         }
 
-        public List<Dividend> getDividends(string symbol)
+        public List<Dividend> getDividends(string symbol, bool update)
         {
             // string to specify information to be retrieved from the API
             string IEXTrading_API_PATH = "stock/" + symbol + "/dividends/1y";
@@ -318,7 +357,6 @@ namespace API_Usage.Controllers
             // initialize objects needed to gather data
             string dividendList = "";
             List<Dividend> Dividends = new List<Dividend>();
-
 
             // connect to the API and obtain the response
             HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
@@ -331,22 +369,33 @@ namespace API_Usage.Controllers
                 // parse the string into appropriate objects
                 if (!dividendList.Equals(""))
                 {
+                    //If update, first remove all the entities associated with the symbol, and then insert it again.
+                    //Why do not update? because we cannot track a specific ChartElement
+                    //Since our ID is an autoincrement.
+                    if (update)
+                    {
+                        foreach (Dividend currentEntity in dbContext.Dividends.Where(d => d.symbol == symbol).ToList())
+                        {
+                            dbContext.Remove(currentEntity);
+                        }
+                    }
+
                     Dividends = JsonConvert.DeserializeObject<List<Dividend>>(dividendList,
                       new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                     //Make sure the data is in ascending order of date
                     Dividends = Dividends.OrderBy(c => c.paymentDate).ToList();
-                }
 
-                // The symbol serves as the foreign key in the database and connects the 
-                // Dividends to the company
-                // Also save the data on the Database
-                foreach (Dividend Dividend in Dividends)
-                {
-                    Dividend.symbol = symbol;
-                    dbContext.Dividends.Add(Dividend);
+                    // The symbol serves as the foreign key in the database and connects the 
+                    // Dividends to the company
+                    // Also save the data on the Database
+                    foreach (Dividend Dividend in Dividends)
+                    {
+                        Dividend.symbol = symbol;
+                        dbContext.Dividends.Add(Dividend);
+                    }
+                    dbContext.SaveChanges();
                 }
-                dbContext.SaveChanges();
             }
 
             return Dividends;
@@ -539,7 +588,7 @@ namespace API_Usage.Controllers
         /// Save the available symbols in the database
         /// </summary>
         /// <returns></returns>
-        public IActionResult PopulateSymbols()
+        /*public IActionResult PopulateSymbols()
         {
             // retrieve the companies that were saved in the symbols method
             // saving in TempData is extremely inefficient - the data circles back from the browser
@@ -561,7 +610,7 @@ namespace API_Usage.Controllers
             dbContext.SaveChanges();
             ViewBag.dbSuccessComp = 1;
             return View("Symbols", companies);
-        }
+        }*/
 
         /// <summary>
         /// Delete all records from tables
