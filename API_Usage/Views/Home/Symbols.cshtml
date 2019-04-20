@@ -57,12 +57,12 @@
 
                         </tr>
                         <tr>
-                            <td align="right">@Model.Current.KeyStats.marketcap</td>
-                            <td align="right">@Model.Current.KeyStats.sharesOutstanding</td>
-                            <td align="right">@Model.Current.KeyStats.priceToSales</td>
-                            <td align="right">@Model.Current.KeyStats.priceToBook</td>
-                            <td align="right">@Model.Current.KeyStats.returnOnAssets</td>
-                            <td align="right">@Model.Current.KeyStats.returnOnEquity</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.KeyStats.marketcap)</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.sharesOutstanding)</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.KeyStats.priceToSales)</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.KeyStats.priceToBook)</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.returnOnAssets)%</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.returnOnEquity)%</td>
 
                         </tr>
                         <tr>
@@ -74,12 +74,12 @@
                             <th align="left">Week 52 Low</th>
                         </tr>
                         <tr>
-                            <td align="right">@Model.Current.KeyStats.beta</td>
-                            <td align="right">@Model.Current.KeyStats.shortRatio</td>
-                            <td align="right">@Model.Current.KeyStats.dividendYield</td>
-                            <td align="right">@Model.Current.KeyStats.week52change</td>
-                            <td align="right">@Model.Current.KeyStats.week52high</td>
-                            <td align="right">@Model.Current.KeyStats.week52low</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.beta)</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.shortRatio)</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.dividendYield)</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.week52change)%</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.week52high)</td>
+                            <td align="right">@string.Format("{0:#,0.00}", @Model.Current.KeyStats.week52low)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -96,27 +96,27 @@
                         </tr>
                         <tr>
                             <td align="left">Total Revenue</td>
-                            <td align="right">@Model.Current.Financials.totalRevenue</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.totalRevenue)</td>
                         </tr>
                         <tr>
                             <td align="left">Cost of Revenue</td>
-                            <td align="right">@Model.Current.Financials.costOfRevenue</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.costOfRevenue)</td>
                         </tr>
                         <tr>
                             <td align="left">Gross Profit</td>
-                            <td align="right">@Model.Current.Financials.grossProfit</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.grossProfit)</td>
                         </tr>
                         <tr>
                             <td align="left">Operating Expense</td>
-                            <td align="right">@Model.Current.Financials.operatingExpense</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.operatingExpense)</td>
                         </tr>
                         <tr>
                             <td align="left">Operating Income or Loss</td>
-                            <td align="right">@Model.Current.Financials.operatingIncome</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.operatingIncome)</td>
                         </tr>
                         <tr>
                             <td align="left">Net Income</td>
-                            <td align="right">@Model.Current.Financials.netIncome</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.netIncome)</td>
                         </tr>
                         <tr>
                             <th align="left"><h3>Balance Sheet</h3></th>
@@ -124,15 +124,15 @@
                         </tr>
                         <tr>
                             <td align="left">Total Assets</td>
-                            <td align="right">@Model.Current.Financials.totalAssets</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.totalAssets)</td>
                         </tr>
                         <tr>
                             <td align="left">Total Liabilities</td>
-                            <td align="right">@Model.Current.Financials.totalLiabilities</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.totalLiabilities)</td>
                         </tr>
                         <tr>
                             <td align="left">Stockholders' Equity</td>
-                            <td align="right">@Model.Current.Financials.shareholderEquity</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.shareholderEquity)</td>
                         </tr>
                         <tr>
                             <th align="left"><h3>Cash Flow</h3></th>
@@ -140,7 +140,7 @@
                         </tr>
                         <tr>
                             <td align="left">Cash Flow</td>
-                            <td align="right">@Model.Current.Financials.cashFlow</td>
+                            <td align="right">$@string.Format("{0:#,0.00}", @Model.Current.Financials.cashFlow)</td>
                         </tr>
                     </tbody>
                 </table>
