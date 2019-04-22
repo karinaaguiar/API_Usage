@@ -381,3 +381,50 @@ h2.qstock-category {
         height: 300px !important;
     }
 }
+
+/*
+    About
+*/
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    min-height: 500px;
+    margin-top: 20px;
+}
+
+.member-content {
+    margin: 5px 10px;
+    padding: 5px 5px;
+    height: 400px;
+}
+
+.member-content > .bio {
+    margin: 15px;
+    text-align: justify;
+    cursor: pointer;
+}
+
+.title {
+    color: grey;
+}
+
+.btn-contact {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #32a0c2;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-contact:hover {
+    background-color: #555;
+}
+
+img {
+    display: block;
+    margin: auto;
+    width: 40%;
+}

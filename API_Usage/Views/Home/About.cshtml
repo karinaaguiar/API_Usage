@@ -4,6 +4,12 @@
 
 <section>
     <div class="container">
+        <h2>About Q-Stock Team Members</h2>
+        <hr />
+
+        <div id="team-member-details">
+        </div>
+
         <h2>About Q-Stock Application</h2>
         <hr />
 
@@ -38,20 +44,6 @@
             </p>
         </div>
 
-        <h2>About Q-Stock Team Members</h2>
-        <hr />
-
-        <div>
-            <p>
-                The team members involved in creating this project are :
-                <ul>
-                    <li>Karina Aguiar Goncalves </li>
-                    <li>Quynh Mai</li>
-                    <li>Malathy Munusamy</li>
-                </ul>
-            </p>
-        </div>
-
         <h2>About GitHub</h2>
         <hr />
 
@@ -62,3 +54,89 @@
         </div>
     </div>
 </section>
+
+<!-- Bio template -->
+<script type="text/template" data-template="bio-item">
+
+    <div class="col-sm-4 col-12">
+        <div class="card">
+            <div class="row">
+                <img src="${bioThumb}" alt="${bioFullname}" style="width: auto; max-width: 300px; height: 230px;">
+            </div>
+            <div class="member-content">
+                <h2>${bioFullname}</h2>
+                <p class="title">${bioTitle}</p>
+
+                <p data-target="#${bioId}-more" class="bio bio-main">
+                    ${bioMainHtml}
+                </p>
+
+                <button class="btn-contact" onclick="window.open('https://www.linkedin.com/in/${bioLink}')">LinkedIn</button>
+
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    // Add new bio to alldata and the html will be auto-generated based on the new content
+    var alldata = [{
+      bioFullname: 'Karina Aguiar',
+      bioId: 'karina',
+      bioTitle: 'Technology Director',
+      bioThumb: '../img/karina.jpg',
+      bioMainHtml: 'Karina completed her BS in Computer Engineering from Simon Bolivar University with about four years of experience creating IT Solutions and Web-based Applications, with strong background in data analysis, design, implementation, and optimization of software applications. She has worked in the development and design of different solutions, including: mobile applications, business rules configuration, monitor processes, Web systems and Web services.',
+      bioLink: 'karina-aguiar-goncalves-58973997/'
+    },{
+      bioFullname: 'Quynh Mai',
+      bioId: 'quynh',
+      bioTitle: 'Managing Director',
+      bioThumb: '../img/quynh.jpg',
+      bioMainHtml: 'Quynh completed her bachelor degree in Supply Chain Management from Portland State University. She was a Production Planner at Intel Products Vietnam for four years. Her responsibility was to manage manufacturing schedules and supplies for chipset/CPU products to ensure the Vietnam factory meet build commits with sufficient resources. She worked with various Intel custom-designed systems and tools on a daily basis and involved in many continuous improvement projects.',
+	  bioLink: 'qmai/'
+    },{
+      bioFullname: 'Malathy Munusamy',
+      bioId: 'malathy',
+      bioTitle: 'Design Director',
+      bioThumb: '../img/malathy.jpg',
+      bioMainHtml: 'Malathy completed her Bachelor of Engineering in Computer Science from Anna University. She is an experienced Senior Business System Analyst with a demonstrated history of working in the information technology and services industry. She possesses good Analytical Skills and has experiences in Requirements Analysis, Sybase Products, C++, and US Healthcare. Malathy is currently a Graduate Teaching Assistant for Cybersecurity at the University of South Florida',
+      bioLink: 'malathy90/'
+    }
+    ];
+
+
+    var bioTemplate = $('script[data-template="bio-item"]').text().split(/\$\{(.+?)\}/g);
+
+    var renderData = function(props) {
+      return function(tok, i) {
+        return (i % 2) ? props[tok] : tok;
+      };
+    }
+
+    var generateItem = function(aData, template) {
+        var rootElement = $('#team-member-details');
+
+      for(i=0; i<aData.length; i++) {
+
+        //add row every 3 items
+        var rowId = 'row'+Math.floor(i/3);
+        if(i%3===0) {
+          $('<div/>', {
+            id: rowId,
+            "class": 'row'
+          }).appendTo(rootElement);
+        }
+
+        //insert bio item
+        $('#'+rowId).append(bioTemplate.map(renderData(aData[i])).join(''));
+      }
+    }
+
+    generateItem(alldata, bioTemplate);
+
+    
+  });
+</script>
